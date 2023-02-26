@@ -10,10 +10,55 @@ import (
 
 	"Golang-CRUD-Api/models"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
 	"github.com/gorilla/mux"
 )
+
+// Get a single article by ID
+func getArticleById(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("GET article by ID.")
+	response := map[string]interface{}{
+		"status":  "",
+		"message": "",
+		"data":    nil,
+	}
+
+	vars := mux.Vars(r)
+	id, err := primitive.ObjectIDFromHex(vars["article_id"])
+	if err != nil {
+		fmt.Println("invalid article ID")
+
+		response["status"] = http.StatusBadRequest
+		response["message"] = "invalid article ID"
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	collection := client.Database("mydb").Collection("articles")
+	// Find the article by ID in mongo
+	var article models.Article
+	err = collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&article)
+	if err != nil {
+		fmt.Printf("Article not found for id: %s\n", vars["article_id"])
+
+		response["status"] = http.StatusNotFound
+		response["message"] = "Article Not Found"
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	response["status"] = 200
+	response["message"] = "Success"
+	response["data"] = []models.Article{article}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(response)
+}
 
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	var article models.Article
@@ -92,6 +137,7 @@ func app() {
 	}).Methods("GET")
 
 	router.HandleFunc("/articles", CreateArticle).Methods("POST")
+	router.HandleFunc("/articles/{article_id}", getArticleById).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
