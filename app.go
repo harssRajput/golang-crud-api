@@ -60,6 +60,61 @@ func getArticleById(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
+// Get all articles
+func getAllArticles(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("GET all articles")
+	response := map[string]interface{}{
+		"status":  "",
+		"message": "",
+		"data":    nil,
+	}
+
+	collection := client.Database("mydb").Collection("articles")
+	// get all articles in the db
+	var articles []models.Article
+	cursor, err := collection.Find(context.Background(), bson.M{})
+	if err != nil {
+		fmt.Println("Failed to fetch articles")
+
+		response["status"] = http.StatusInternalServerError
+		response["message"] = "Failed to fetch articles"
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	defer cursor.Close(context.Background())
+	for cursor.Next(context.Background()) {
+		var article models.Article
+		if err := cursor.Decode(&article); err != nil {
+			fmt.Println("Failed to Decode articles")
+
+			response["status"] = http.StatusInternalServerError
+			response["message"] = "Failed to Decode articles"
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(response)
+			return
+		}
+		articles = append(articles, article)
+	}
+	if err := cursor.Err(); err != nil {
+		fmt.Println("Failed to Decode articles")
+
+		response["status"] = http.StatusInternalServerError
+		response["message"] = "Failed to Decode articles"
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(response)
+		return
+	}
+
+	response["status"] = 200
+	response["message"] = "Success"
+	response["data"] = articles
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
+	json.NewEncoder(w).Encode(response)
+}
+
 func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	var article models.Article
 	// = models.Article{
@@ -138,6 +193,7 @@ func app() {
 
 	router.HandleFunc("/articles", CreateArticle).Methods("POST")
 	router.HandleFunc("/articles/{article_id}", getArticleById).Methods("GET")
+	router.HandleFunc("/articles", getAllArticles).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
