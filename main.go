@@ -3,5 +3,6 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Let's start with GOO!")
+	//first init() function executes present in init.go
+	fmt.Print("came here after mongo connection")
 }
