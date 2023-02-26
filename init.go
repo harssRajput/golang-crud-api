@@ -13,6 +13,7 @@ var client *mongo.Client
 
 func init() {
 	init_mongo()
+	fmt.Println("init end..")
 }
 
 func init_mongo() {
