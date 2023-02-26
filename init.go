@@ -13,10 +13,11 @@ var client *mongo.Client
 
 func init() {
 	init_mongo()
-	fmt.Println("init end..")
 }
 
 func init_mongo() {
+
+	fmt.Println("initializing MongoDB...")
 	// Set client options
 	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 
@@ -28,5 +29,5 @@ func init_mongo() {
 		log.Fatal("Unable to connect MongoDB ", err)
 	}
 
-	fmt.Println("Connected to MongoDB!", client)
+	fmt.Println("Connected to MongoDB.")
 }

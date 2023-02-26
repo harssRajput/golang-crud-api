@@ -8,7 +8,7 @@ import (
 )
 
 type Article struct {
-	ID      primitive.ObjectID `bson:"_id,omitempty"`
+	Id      primitive.ObjectID `bson:"_id,omitempty" json:"id"`
 	Title   string             `json:"title,omitempty"`
 	Content string             `json:"content,omitempty"`
 	Author  string             `json:"author,omitempty"`

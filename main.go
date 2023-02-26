@@ -6,7 +6,8 @@ import (
 
 func main() {
 	//first init() function executes that present in init.go
-	fmt.Println("came here after mongo connection")
-	// CreateArticle()
-	app()
+	fmt.Println("App initialization is done.")
+
+	fmt.Println("server is starting...")
+	app() //it init server and business logic(service layre)
 }
