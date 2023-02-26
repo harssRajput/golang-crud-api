@@ -16,6 +16,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
+func app() {
+	// Set up router
+	router := mux.NewRouter()
+
+	router.HandleFunc("/articles", CreateArticle).Methods("POST")
+	router.HandleFunc("/articles/{article_id}", getArticleById).Methods("GET")
+	router.HandleFunc("/articles", getAllArticles).Methods("GET")
+
+	log.Fatal(http.ListenAndServe(":8080", router))
+}
+
 // Get a single article by ID
 func getArticleById(w http.ResponseWriter, r *http.Request) {
 
@@ -172,28 +183,4 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
-}
-
-func app() {
-	// Set up router
-	router := mux.NewRouter()
-
-	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("get home request")
-		response := map[string]interface{}{
-			"status":  201,
-			"message": "it's a home page.",
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(response)
-
-	}).Methods("GET")
-
-	router.HandleFunc("/articles", CreateArticle).Methods("POST")
-	router.HandleFunc("/articles/{article_id}", getArticleById).Methods("GET")
-	router.HandleFunc("/articles", getAllArticles).Methods("GET")
-
-	log.Fatal(http.ListenAndServe(":8080", router))
 }
