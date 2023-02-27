@@ -19,7 +19,7 @@ func init_mongo() {
 
 	fmt.Println("initializing MongoDB...")
 	// Set client options
-	clientOptions := options.Client().ApplyURI(MONGODB_URI + "/" + MONGODB_PORT)
+	clientOptions := options.Client().ApplyURI(MONGODB_URI + ":" + MONGODB_PORT)
 
 	// Connect to MongoDB
 	client, _ = mongo.Connect(context.Background(), clientOptions)
