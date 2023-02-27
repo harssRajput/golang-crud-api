@@ -20,12 +20,12 @@ func app() {
 	// Set up router
 	router := mux.NewRouter()
 
-	router.HandleFunc("/articles", CreateArticle).Methods("POST")
+	router.HandleFunc("/articles", createArticle).Methods("POST")
 	router.HandleFunc("/articles/{article_id}", getArticleById).Methods("GET")
 	router.HandleFunc("/articles", getAllArticles).Methods("GET")
 
 	fmt.Println("Server is ready!")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":"+SERVER_PORT, router))
 }
 
 // Get a single article by ID
@@ -37,7 +37,7 @@ func getArticleById(w http.ResponseWriter, r *http.Request) {
 	id, err := primitive.ObjectIDFromHex(vars["article_id"])
 	if err != nil {
 		fmt.Println("invalid article ID")
-		sendResponse(400, "invalid article ID", nil, w)
+		sendResponse(400, "Invalid article ID", nil, w)
 		return
 	}
 
@@ -88,7 +88,7 @@ func getAllArticles(w http.ResponseWriter, r *http.Request) {
 	sendResponse(200, "Success", articles, w)
 }
 
-func CreateArticle(w http.ResponseWriter, r *http.Request) {
+func createArticle(w http.ResponseWriter, r *http.Request) {
 	var article models.Article
 	fmt.Println("POST article request.")
 
