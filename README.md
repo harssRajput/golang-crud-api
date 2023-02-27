@@ -1,5 +1,5 @@
 # golang-crud-api
-golang MongoDB crud API with all valid test cases. It is compatible with docker.
+golang MongoDB crud API with all possible test cases. It is compatible with docker.
 
 The main.go is the entry point of the application. It contains as a triggering point to the web-server and as a initiasization before running the server.
 
