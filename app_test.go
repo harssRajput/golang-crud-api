@@ -78,6 +78,19 @@ func TestCreateArticle(t *testing.T) {
 		        "data": null
 		    }`,
 		},
+		{
+			name: "Invalid Body",
+			inputJSON: `[{
+		        "content": "",
+		        "author": "Test Author"
+		    }]`,
+			expectedStatus: http.StatusBadRequest,
+			expectedResp: `{
+		        "status": 400,
+		        "message": "Invalid request payload",
+		        "data": null
+		    }`,
+		},
 	}
 
 	// Set up router
