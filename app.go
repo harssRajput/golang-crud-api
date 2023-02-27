@@ -101,7 +101,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 
 	//validation
 	if err := article.Validate(); err != nil {
-		fmt.Println("validation failed. ", err)
+		fmt.Println("Validation failed!.", err)
 		sendResponse(422, "Validation failed!. "+err.Error(), nil, w)
 		return
 	}

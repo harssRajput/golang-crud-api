@@ -16,15 +16,15 @@ type Article struct {
 
 func (a *Article) Validate() error {
 	if len(strings.TrimSpace(a.Title)) == 0 {
-		return errors.New("title is required")
+		return errors.New("title must not be empty")
 	}
 
 	if len(strings.TrimSpace(a.Content)) == 0 {
-		return errors.New("content is required")
+		return errors.New("content must not be empty")
 	}
 
 	if len(strings.TrimSpace(a.Author)) == 0 {
-		return errors.New("author is required")
+		return errors.New("author must not be empty")
 	}
 
 	return nil
